@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: remove-empty-ns
+spec:
+  schedule: 0 2 * * * # Cron syntax for scheduling (runs daily at 2 AM UTC)
+  startingDeadlineSeconds: 200 # Optional: time in seconds to allow starting a missed job
+  concurrencyPolicy: Forbid # No pod concurrency is supported
+  successfulJobsHistoryLimit: 10 # Optional: number of successful job histories to keep
+  failedJobsHistoryLimit: 10 # Optional: number of failed job histories to keep
+  jobTemplate:
+    spec:
+      backoffLimit: 3 # Optional: retries for failed jobs
+      template:
+        spec:
+          serviceAccountName: remove-empty-ns
+          containers:
+            - name: remove-empty-ns
+              image: rgeraskin/remove-empty-ns:latest
+              imagePullPolicy: Always
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+          volumes:
+            - name: config
+              configMap:
+                name: remove-empty-ns-config
+          restartPolicy: Never

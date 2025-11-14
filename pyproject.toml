@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "remove-empty-ns"
+version = "0.1.0"
+description = "Application that removes kubernetes empty namespaces"
+authors = ["Roman Geraskin"]
+readme = "README.md"
+license = "MIT"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+kubernetes = "^32.0.0"
+rich = "^14.2.0"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = "^1.9.0"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "poetry"
+update_changelog_on_bump = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,32 @@
+[tools]
+poetry = "2.1.1"
+pre-commit = "3.8.0"
+python = "3.12.0"
+
+[env]
+_.python.venv = ".venv"
+APP_VERSION = "0.1.0"
+
+[tasks.venv]
+description = "Prepare the virtual environment"
+run = "poetry install"
+
+[tasks.run]
+description = "Run the application"
+run = "poetry run -- python ./src/app.py -c kustomize/settings.yaml"
+
+[tasks.test]
+description = "Run tests in the current cluster"
+run = "python -m unittest tests/tests.py"
+
+[tasks.push]
+description = "Push the Docker image to a registry"
+run = "docker buildx --builder all-platform build --platform linux/amd64,linux/arm64 . -t rgeraskin/remove-empty-ns:${APP_VERSION} --push"
+
+[tasks.install]
+description = "Install or upgrade the CronJob"
+run = "kubectl apply -k kustomize/"
+
+[tasks.uninstall]
+description = "Uninstall the CronJob"
+run = "kubectl delete -k kustomize/"

@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - base/namespace.yaml
+  - base/cronjob.yaml
+  - base/rbac.yaml
+
+namespace: remove-empty-ns
+
+images:
+  - name: rgeraskin/remove-empty-ns
+    newTag: 0.1.0
+
+configMapGenerator:
+  - name: remove-empty-ns-config
+    files:
+      - settings.yaml
